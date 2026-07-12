@@ -158,6 +158,22 @@ body {
   box-shadow: 0 0 8px var(--violet-bright);
 }
 
+.rail-btn-home {
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.rail-btn-home.active {
+  background: var(--violet-dim);
+}
+
+.rail-group:has(.rail-btn-home) {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
 .rail-btn:focus-visible {
   outline: 2px solid var(--violet-bright);
   outline-offset: 2px;
@@ -295,6 +311,83 @@ body {
   max-width: 520px;
   line-height: 1.6;
   margin-bottom: 40px;
+}
+
+.live-stats {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.live-stats-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green);
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-flash 1.8s ease-in-out infinite;
+}
+
+.live-stats-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.live-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.live-stat-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.live-stat-num {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--violet-bright);
+  transition: opacity 0.2s ease;
+}
+
+.live-stats-note {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  margin-top: 14px;
+  font-style: italic;
 }
 
 .home-grid {
@@ -439,10 +532,50 @@ body {
   color: var(--text);
 }
 
+.graph-canvas {
+  position: relative;
+}
+
 .graph-svg {
   width: 100%;
   height: 160px;
   display: block;
+  cursor: crosshair;
+}
+
+#hoverDot, #hoverLine {
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+}
+
+.graph-tooltip {
+  position: absolute;
+  background: var(--bg);
+  border: 1px solid var(--violet);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px -6px rgba(0,0,0,0.5);
+  z-index: 5;
+}
+
+.graph-tooltip .tt-time {
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.graph-tooltip .tt-pct {
+  color: var(--violet-bright);
+  font-weight: 700;
 }
 
 #graphPath {
@@ -455,6 +588,65 @@ body {
   color: var(--text-dim);
   line-height: 1.6;
   margin-top: 12px;
+}
+
+.wave-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 160px;
+  padding: 0 4px;
+}
+
+.wave-bar-wrap {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  gap: 8px;
+}
+
+.wave-bar {
+  width: 100%;
+  min-height: 8px;
+  border-radius: 6px 6px 2px 2px;
+  background: var(--violet-dim);
+  border: 1px solid var(--border);
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.wave-bar-wrap:hover .wave-bar,
+.wave-bar-wrap.active .wave-bar {
+  background: linear-gradient(180deg, var(--violet-bright), var(--violet));
+  border-color: var(--violet-bright);
+  transform: scaleX(1.05);
+}
+
+.wave-bar-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  transition: color 0.15s ease;
+}
+
+.wave-bar-wrap:hover .wave-bar-label,
+.wave-bar-wrap.active .wave-bar-label {
+  color: var(--text);
+}
+
+.wave-caption {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-top: 16px;
+  min-height: 20px;
 }
 
 .rule {
