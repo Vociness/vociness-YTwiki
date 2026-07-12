@@ -41,7 +41,7 @@ const GUIDES = {
 
   "scripting-rules": {
     title: "📝 Scripting Rules",
-    stat: { num: "6️⃣", label: "non-negotiable" },
+    stat: { num: "4️⃣", label: "non-negotiable" },
     intro: "Pulled straight from feedback on the top-performing videos. Apply these EVERY single time a script gets written or reviewed. No exceptions. 🚫",
     rules: [
       {
@@ -61,14 +61,6 @@ const GUIDES = {
       {
         title: "💭 Opinion → news, not opinion → opinion → news",
         body: "State the take, then go straight to the thing that proves it. Don't explain the take, restate it, and then get to the news. Cut straight to the evidence."
-      },
-      {
-        title: "🎯 Target 60% retention at end of an 8-minute video",
-        body: "That's the benchmark for mega-viral. Every scripting decision gets made with this number in mind. If a line doesn't earn its place, cut it. ✂️"
-      },
-      {
-        title: "🎬 Editing is not the problem — scripting is",
-        body: "Both top videos had decent CTR and YouTube tried to push them. Retention killed the push both times. Always audit the script first before touching the edit."
       }
     ]
   },
@@ -190,6 +182,7 @@ const GUIDES = {
     title: "🌊 Wave System",
     stat: { num: "3", label: "core signals tracked" },
     intro: "How YouTube actually decides who sees a new video. 🎯",
+    hasWaveGraph: true,
     rules: [
       {
         title: "🧪 Small test groups first",
