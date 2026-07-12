@@ -1,14 +1,16 @@
 :root {
-  --bg: #0b0d10;
-  --bg-raised: #12151a;
-  --bg-hover: #181c22;
-  --border: #22262d;
-  --text: #e8e6e1;
-  --text-dim: #9a9fa8;
-  --text-faint: #5b6572;
-  --red: #ff3b3b;
-  --red-dim: #7a2020;
-  --amber: #f2a93b;
+  --bg: #0d0a17;
+  --bg-raised: #171025;
+  --bg-hover: #201731;
+  --border: #2c2044;
+  --text: #ece7f5;
+  --text-dim: #a99bc4;
+  --text-faint: #6b5d87;
+  --violet: #8b5cf6;
+  --violet-bright: #a78bfa;
+  --pink: #e8a0c4;
+  --violet-dim: #3d2a5c;
+  --green: #4ade80;
   --mono: 'Space Mono', monospace;
   --sans: 'Inter', sans-serif;
 }
@@ -56,7 +58,7 @@ html, body {
 }
 
 .brand-mark {
-  color: var(--red);
+  color: var(--violet-bright);
   font-size: 14px;
 }
 
@@ -65,6 +67,10 @@ html, body {
   font-weight: 700;
   font-size: 16px;
   letter-spacing: -0.02em;
+  background: linear-gradient(90deg, var(--violet-bright), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .brand-sub {
@@ -128,12 +134,13 @@ html, body {
   top: 8px;
   bottom: 8px;
   width: 2px;
-  background: var(--red);
+  background: var(--violet-bright);
   border-radius: 2px;
+  box-shadow: 0 0 8px var(--violet-bright);
 }
 
 .rail-btn:focus-visible {
-  outline: 2px solid var(--red);
+  outline: 2px solid var(--violet-bright);
   outline-offset: 2px;
 }
 
@@ -148,15 +155,37 @@ html, body {
   color: var(--text-faint);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  line-height: 1.5;
+}
+
+.rail-status-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.rail-status-label {
+  color: var(--text-dim);
+}
+
+.rail-status-date {
+  color: var(--text-faint);
+  font-size: 10px;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 0 6px var(--red);
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  flex-shrink: 0;
+  animation: pulse-flash 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-flash {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--green); }
+  50% { opacity: 0.45; box-shadow: 0 0 10px var(--green); }
 }
 
 /* ============ PANE ============ */
@@ -165,9 +194,37 @@ html, body {
 }
 
 .pane-header {
-  padding: 20px 48px 0;
+  padding: 20px 48px 16px;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px 7px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.back-btn:hover {
+  border-color: var(--violet);
+  color: var(--text);
+  transform: translateX(-2px);
+}
+
+.back-btn.visible {
+  display: inline-flex;
 }
 
 .crumbs {
@@ -183,7 +240,7 @@ html, body {
 }
 
 #crumbCurrent {
-  color: var(--red);
+  color: var(--violet-bright);
 }
 
 .pane-body {
@@ -197,7 +254,7 @@ html, body {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--red);
+  color: var(--violet-bright);
   margin-bottom: 14px;
 }
 
@@ -234,7 +291,7 @@ html, body {
 }
 
 .home-card:hover {
-  border-color: var(--red-dim);
+  border-color: var(--violet);
   transform: translateY(-2px);
 }
 
@@ -242,7 +299,7 @@ html, body {
   font-family: var(--mono);
   font-size: 28px;
   font-weight: 700;
-  color: var(--red);
+  color: var(--violet-bright);
   margin-bottom: 10px;
 }
 
@@ -281,7 +338,7 @@ html, body {
 }
 
 .guide-stat-num {
-  color: var(--red);
+  color: var(--violet-bright);
   font-weight: 700;
   font-size: 18px;
 }
@@ -326,7 +383,7 @@ html, body {
 
 .rule-num {
   font-family: var(--mono);
-  color: var(--red);
+  color: var(--violet-bright);
   font-size: 13px;
   font-weight: 700;
 }
@@ -347,7 +404,7 @@ html, body {
   margin-top: 14px;
   background: var(--bg-raised);
   border: 1px solid var(--border);
-  border-left: 2px solid var(--red);
+  border-left: 2px solid var(--violet);
   border-radius: 0 8px 8px 0;
   padding: 12px 16px;
   font-family: var(--mono);
@@ -357,7 +414,7 @@ html, body {
 }
 
 .rule-example .tag {
-  color: var(--amber);
+  color: var(--pink);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
