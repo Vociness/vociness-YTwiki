@@ -25,6 +25,10 @@
 
     <nav class="rail-nav" id="railNav">
       <div class="rail-group">
+        <button class="rail-btn rail-btn-home" data-page="home">🏠 Home</button>
+      </div>
+
+      <div class="rail-group">
         <div class="rail-group-label">scripting</div>
         <button class="rail-btn" data-page="scripting-rules">Scripting Rules</button>
         <button class="rail-btn" data-page="perfect-script">Writing The Perfect Script</button>
@@ -77,12 +81,32 @@
         <div class="home-hero">
           <div class="home-eyebrow">🔥 proven scripting system</div>
           <h1>Everything the channel runs on. 🚀</h1>
+          <div class="home-lede-wrap">
           <p class="home-lede">The rules that actually worked — pulled straight from top-performing scripts, retention data, and packaging decisions. Pick a topic on the left and let's go. 👇</p>
+        </div>
+
+        <div class="live-stats" id="liveStats">
+          <div class="live-stats-head">
+            <span class="live-badge"><span class="live-dot"></span> live</span>
+            <span class="live-stats-title">channel stats</span>
+          </div>
+          <div class="live-stats-grid">
+            <div class="live-stat">
+              <div class="live-stat-label">views</div>
+              <div class="live-stat-num" id="statViews">—</div>
+            </div>
+            <div class="live-stat">
+              <div class="live-stat-label">subscribers</div>
+              <div class="live-stat-num" id="statSubs">—</div>
+            </div>
+          </div>
+          <div class="live-stats-note">simulated for demo — not connected to real YouTube data</div>
+        </div>
         </div>
 
         <div class="home-grid">
           <button class="home-card" data-page="scripting-rules">
-            <div class="home-card-num">6️⃣</div>
+            <div class="home-card-num">4️⃣</div>
             <div class="home-card-label">scripting rules<br><span>non-negotiable</span></div>
           </button>
           <button class="home-card" data-page="retention">
