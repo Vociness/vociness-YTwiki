@@ -1,7 +1,18 @@
 (function () {
   const paneBody = document.getElementById('paneBody');
   const crumbCurrent = document.getElementById('crumbCurrent');
+  const backBtn = document.getElementById('backBtn');
   const railButtons = document.querySelectorAll('.rail-btn');
+  const lastUpdatedEl = document.getElementById('lastUpdated');
+
+  // ---- last updated date (today's date, formatted) ----
+  if (lastUpdatedEl) {
+    const today = new Date();
+    const formatted = today.toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    });
+    lastUpdatedEl.textContent = 'last updated — ' + formatted;
+  }
 
   // Build DOM for a guide page and cache it so re-visits are instant.
   const renderedPages = {};
@@ -50,6 +61,8 @@
       document.getElementById('page-home').classList.add('active');
       crumbCurrent.textContent = 'home';
       setActiveButton(null);
+      backBtn.classList.remove('visible');
+      history.replaceState(null, '', '#');
       return;
     }
 
@@ -63,6 +76,7 @@
     renderedPages[key].classList.add('active');
     crumbCurrent.textContent = GUIDES[key].title.toLowerCase();
     setActiveButton(key);
+    backBtn.classList.add('visible');
     paneBody.scrollTop = 0;
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
 
@@ -82,6 +96,9 @@
     if (!btn) return;
     showPage(btn.dataset.page);
   });
+
+  // Back button always returns to home
+  backBtn.addEventListener('click', () => showPage('home'));
 
   // Deep-link support: opening #retention loads straight to that guide
   const initial = window.location.hash.replace('#', '');
