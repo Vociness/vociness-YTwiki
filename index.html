@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vociness / wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ NAV RAIL ============ -->
+  <aside class="rail">
+    <div class="rail-top">
+      <div class="brand">
+        <span class="brand-mark">▶</span>
+        <span class="brand-name">vociness</span>
+      </div>
+      <div class="brand-sub">internal wiki</div>
+    </div>
+
+    <nav class="rail-nav" id="railNav">
+      <div class="rail-group">
+        <div class="rail-group-label">scripting</div>
+        <button class="rail-btn" data-page="scripting-rules">Scripting Rules</button>
+        <button class="rail-btn" data-page="shorts-structure">Shorts Structure</button>
+        <button class="rail-btn" data-page="longform-structure">Long-Form Structure</button>
+      </div>
+
+      <div class="rail-group">
+        <div class="rail-group-label">packaging</div>
+        <button class="rail-btn" data-page="thumbnails">Thumbnails &amp; CTR</button>
+        <button class="rail-btn" data-page="titles">Titles &amp; Metadata</button>
+      </div>
+
+      <div class="rail-group">
+        <div class="rail-group-label">algorithm</div>
+        <button class="rail-btn" data-page="retention">Retention Graph</button>
+        <button class="rail-btn" data-page="waves">Wave System</button>
+      </div>
+
+      <div class="rail-group">
+        <div class="rail-group-label">channel ops</div>
+        <button class="rail-btn" data-page="editing-workflow">Editing Workflow</button>
+        <button class="rail-btn" data-page="branding">Visual Branding</button>
+      </div>
+    </nav>
+
+    <div class="rail-bottom">
+      <div class="rail-status">
+        <span class="dot"></span> guide index live
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ CONTENT PANE ============ -->
+  <main class="pane">
+    <div class="pane-header">
+      <div class="crumbs" id="crumbs">
+        <span>wiki</span> <span class="crumb-sep">/</span> <span id="crumbCurrent">home</span>
+      </div>
+    </div>
+
+    <div class="pane-body" id="paneBody">
+      <!-- default / home view -->
+      <section class="page" id="page-home">
+        <div class="home-hero">
+          <div class="home-eyebrow">proven scripting system</div>
+          <h1>Everything the channel runs on.</h1>
+          <p class="home-lede">Rules pulled straight from what actually worked — top-performing scripts, retention data, and packaging decisions. Pick a topic on the left.</p>
+        </div>
+
+        <div class="home-grid">
+          <button class="home-card" data-page="scripting-rules">
+            <div class="home-card-num">6</div>
+            <div class="home-card-label">scripting rules<br><span>non-negotiable</span></div>
+          </button>
+          <button class="home-card" data-page="retention">
+            <div class="home-card-num">60%</div>
+            <div class="home-card-label">retention target<br><span>8-min video, EOV</span></div>
+          </button>
+          <button class="home-card" data-page="thumbnails">
+            <div class="home-card-num">4–5%</div>
+            <div class="home-card-label">CTR benchmark<br><span>below 3% = no push</span></div>
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+</div>
+
+<script src="guides.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

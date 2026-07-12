@@ -1,0 +1,206 @@
+// Each guide = one topic page. Add new ones here — app.js renders them automatically.
+const GUIDES = {
+
+  "scripting-rules": {
+    title: "Scripting Rules",
+    stat: { num: "6", label: "non-negotiable" },
+    intro: "Pulled directly from feedback on the top-performing videos. Apply every single time a script gets written or reviewed.",
+    rules: [
+      {
+        title: "Front-load the value in the first 25 seconds",
+        body: "The hook has to tell viewers everything they're getting before you dive in. Give them a map so they have a reason to stay for the whole video, not just the next 10 seconds.",
+        example: "Roblox did X, Y, Z and a LOT more in this video — let's get into it."
+      },
+      {
+        title: "Never restate the same point twice",
+        body: "The single biggest retention killer. After writing any paragraph, ask: did I already say this? If yes, cut the first version and keep the sharper one.",
+        example: "WRONG: \"further in the wrong direction because in the midst of the Great Chat depression, Roblox somehow managed to announce an update that's arguably even worse\" — says \"bad direction\" twice.\nFIX: \"further in the wrong direction — Roblox just announced [the update].\""
+      },
+      {
+        title: "One example maximum in the opening",
+        body: "Multiple flat examples back to back kill retention early. One punchy example with audio emphasis is enough to prove the point — then move on. Viewers want the point, not a lecture."
+      },
+      {
+        title: "Opinion → news, not opinion → opinion → news",
+        body: "State the take, then go straight to the thing that proves it. Don't explain the take, restate it, and then get to the news. Cut straight to the evidence."
+      },
+      {
+        title: "Target 60% retention at end of an 8-minute video",
+        body: "That's the benchmark for mega-viral. Every scripting decision gets made with this number in mind. If a line doesn't earn its place, cut it."
+      },
+      {
+        title: "Editing is not the problem — scripting is",
+        body: "Both top videos had decent CTR and YouTube tried to push them. Retention killed the push both times. Always audit the script first before touching the edit."
+      }
+    ]
+  },
+
+  "shorts-structure": {
+    title: "Shorts Structure",
+    stat: { num: "81%+", label: "watch % target" },
+    intro: "Hook → build tension → payoff at the very end. Pay off early and retention falls off a cliff.",
+    rules: [
+      {
+        title: "First 2 seconds interrupt the scroll",
+        body: "The hook starts before your mouth even opens. The first frame can't look dead — it has to grab attention instantly."
+      },
+      {
+        title: "Hold the payoff until the last line",
+        body: "Start with conflict, reveal the answer at the very end. Every dip in the retention graph is people leaving because they already got the answer and have no reason left to stay."
+      },
+      {
+        title: "Short and high-retention beats long and mid",
+        body: "A 15–20 second short with 120%+ retention (rewatches) will beat a 40 second short with 60% retention every time."
+      },
+      {
+        title: "It has to work on mute",
+        body: "Watch it back with no sound. If you can't tell what's happening, it's not universal enough. Always caption — a lot of people scroll silent."
+      },
+      {
+        title: "Every short needs an emotion",
+        body: "Curiosity, anger, surprise, ego — something. No emotion means scroll. You're making a stranger feel something in under a minute, not posting a clip."
+      },
+      {
+        title: "Ask for the sub before the payoff",
+        body: "Drop the prompt while the viewer is still locked in, not after. Keep it small or transparent — the moment it feels like an ad, they swipe."
+      }
+    ]
+  },
+
+  "longform-structure": {
+    title: "Long-Form Structure",
+    stat: { num: "8min+", label: "for mid-roll ads" },
+    intro: "Different rules from Shorts. Viewers forget why they stayed — remind them.",
+    rules: [
+      {
+        title: "Use multiple hooks throughout",
+        body: "Viewers naturally forget why they clicked. Restate the reason to keep watching at intervals through the video, not just at the top."
+      },
+      {
+        title: "Always aim past 8 minutes",
+        body: "That's the mid-roll ad eligibility threshold. A one-hour video multiplies RPM roughly 6x versus average because viewers see far more ads — but never pad runtime at the expense of retention."
+      },
+      {
+        title: "Title and thumbnail work together",
+        body: "They should give the viewer complete context of what they'll miss by not clicking — not duplicate each other, complement each other."
+      }
+    ]
+  },
+
+  "thumbnails": {
+    title: "Thumbnails & CTR",
+    stat: { num: "4–5%", label: "average CTR" },
+    intro: "CTR is the first gate. Below 3% and YouTube won't push the video, full stop.",
+    rules: [
+      {
+        title: "CTR is a filter, not a vanity metric",
+        body: "Every impression is a slot. Why would YouTube give one to a low-CTR video when a high-CTR video is proven to get clicks? Below 3% CTR, expect no push."
+      },
+      {
+        title: "YouTube's AI actually scans the thumbnail",
+        body: "Faces, objects, and text are read by the algorithm — the thumbnail isn't just for humans, it's classification data too."
+      },
+      {
+        title: "Idea beats design",
+        body: "CTR is driven by thumbnail, title, and the underlying idea together. A well-designed thumbnail for a weak idea still underperforms."
+      }
+    ]
+  },
+
+  "titles": {
+    title: "Titles & Metadata",
+    stat: { num: "#1", label: "priority on a new channel" },
+    intro: "Metadata is the most important lever on a channel YouTube doesn't trust yet.",
+    rules: [
+      {
+        title: "The title has to tell YouTube what the video is",
+        body: "Vague titles force YouTube to guess the audience. Given the choice, YouTube would rather push a video it understands than risk showing the wrong content to the wrong person."
+      },
+      {
+        title: "Fill out tags, chapters, and timestamps",
+        body: "All of it gives the algorithm more context for classification. Empty descriptions are a wasted signal."
+      },
+      {
+        title: "First 24–48 hours is a review window",
+        body: "After upload, YouTube transcribes the audio, scans the thumbnail, and classifies the content before it starts really pushing. That's why a new video's first views are slow to arrive — it's still being profiled."
+      }
+    ]
+  },
+
+  "retention": {
+    title: "Retention Graph",
+    stat: { num: "60%", label: "target @ 8min EOV" },
+    intro: "More important than CTR. Flat, high, smallest possible initial dip.",
+    rules: [
+      {
+        title: "The graph always trends down — that's normal",
+        body: "Viewers naturally leave over time. What matters is the shape, not the fact that it declines."
+      },
+      {
+        title: "A steep early dip means a bad hook",
+        body: "If a lot of viewers bail in the first seconds, the hook isn't doing its job — it didn't earn the click."
+      },
+      {
+        title: "A steep dip mid-video means bad pacing",
+        body: "If retention craters partway through, that's a storytelling and pacing problem, not a hook problem — usually a restated point or a payoff given too early."
+      }
+    ]
+  },
+
+  "waves": {
+    title: "Wave System",
+    stat: { num: "3", label: "core signals tracked" },
+    intro: "How YouTube actually decides who sees a new video.",
+    rules: [
+      {
+        title: "Small test groups first",
+        body: "YouTube pushes to a small audience and watches how they respond before deciding whether to ramp up, slow down, or plateau."
+      },
+      {
+        title: "Browse feed is tested before suggested feed",
+        body: "Suggested (the sidebar) depends more heavily on target-audience data, so YouTube waits for more signal before showing a video there. Suggested impressions are worth more because they keep people on-platform longer."
+      },
+      {
+        title: "Session time is the strongest signal of all",
+        body: "YouTube's real goal is total time on platform. A video that leads to another video watched — even an unrelated one via end-screen or playlist — is one of the strongest pushes a creator can trigger."
+      }
+    ]
+  },
+
+  "editing-workflow": {
+    title: "Editing Workflow",
+    stat: { num: "2", label: "core tools" },
+    intro: "Scripting comes first — editing only fixes what a bad script can't.",
+    rules: [
+      {
+        title: "Script audit before edit audit",
+        body: "If a video underperforms despite decent CTR, check the script and retention graph before blaming the edit."
+      },
+      {
+        title: "Editor pay structure",
+        body: "Bonuses based on videos completed, not views — editors are inconsistent contributors to view count, but consistency of delivery is something they control directly."
+      },
+      {
+        title: "Shared drive for materials",
+        body: "Keep scripts, assets, and raw footage in one shared Google Drive so editors always pull from the same source of truth."
+      }
+    ]
+  },
+
+  "branding": {
+    title: "Visual Branding",
+    stat: { num: "1", label: "signature look" },
+    intro: "Differentiation matters — a look that blends into the niche gets skipped over.",
+    rules: [
+      {
+        title: "Blend-in aesthetics blend into scroll-past",
+        body: "If the thumbnail style matches five other channels in the niche, viewers pattern-match past it without registering who posted it."
+      },
+      {
+        title: "A mascot or glitch-style identity creates recognition",
+        body: "A distinct visual anchor — a mascot, a consistent visual glitch effect, a specific color language — gives viewers something to recognize at a glance, separate from any one thumbnail."
+      }
+    ]
+  }
+
+};
