@@ -1,6 +1,44 @@
 // Each guide = one topic page. Add new ones here — app.js renders them automatically.
 const GUIDES = {
 
+  "perfect-script": {
+    title: "🧩 Writing The Perfect Script",
+    stat: { num: "8", label: "sentence framework" },
+    intro: "The 8-sentence intro framework. Get straight to the point, make everything in the intro build to the payoff, no extra fluff. 🎯",
+    rules: [
+      {
+        title: "🪝 Sentence 1 — The Hook",
+        body: "Super eye-catching visuals, psychological triggers, give context to the viewer. Hooking techniques: make the viewer question something, create urgency, include someone recognizable (famous) in the first clip/frame, anti-hook (no context, straight into the video), immediate consequence (show the result before the explanation), contradictory hook (directly conflicts with what the viewer assumes).",
+        example: "\"Doing this ruined my sleep for 3 weeks.\" — immediate consequence\n\"Healthy food can be worse for you than junk food.\" — contradictory hook\n\"Do you know why MrBeast turned down 1 billion dollars?\" — recognizable person + making the viewer question + urgency"
+      },
+      {
+        title: "🤝 Sentence 2 — The Supporting Hook",
+        body: "Set an expectation, then overdeliver on it. Flow: set an expectation → give context → overdeliver. Don't overcomplicate this — if you don't know what you're doing, don't do it. Techniques: read the viewer's thought, then shut it down by telling them they're completely wrong.",
+        example: "\"You may think it's because MrBeast doesn't actually want to sell his channel, or maybe even because he already has enough money, but you would be completely wrong.\""
+      },
+      {
+        title: "📍 Sentences 3-4 — Setting The Scene",
+        body: "Set a time or location and develop context of the video slowly, leading into the payoff. Don't overexplain.",
+        example: "\"Recently, MrBeast went on Andrew Schultz's podcast and revealed that he had been offered 1 billion dollars for the sale of all of his businesses combined.\""
+      },
+      {
+        title: "📊 Sentences 5-6 — Setting The Stakes",
+        body: "Turn the context and curiosity into an investment, add extra context or facts to help the next techniques land. Techniques: \"why did they do this?\", tease the viewer for the payoff, make the viewer solve a puzzle, rehook (remind the viewer why they're watching).",
+        example: "\"If he accepted this offer, MrBeast would not only become YouTube's first billionaire, but also the youngest self-made billionaire in history. So, what was the crazy reason he gave for declining this offer?\""
+      },
+      {
+        title: "🎁 Sentence 7 — The Payoff",
+        body: "Deliver the payoff fast. Keep it simple.",
+        example: "\"So who is it? Well, his name is Chandler.\""
+      },
+      {
+        title: "🔁 Sentence 8 — CTA (optional)",
+        body: "Tie the call-to-action into the actions of the video itself. Add a loop when ending the video — it boosts retention.",
+        example: "\"...and subscribe if you want to work for MrBeast.\" — CTA tied directly to the story's action"
+      }
+    ]
+  },
+
   "scripting-rules": {
     title: "📝 Scripting Rules",
     stat: { num: "6️⃣", label: "non-negotiable" },
@@ -131,6 +169,7 @@ const GUIDES = {
     title: "📈 Retention Graph",
     stat: { num: "60%", label: "target @ 8min EOV" },
     intro: "More important than CTR. Flat, high, smallest possible initial dip. 🏔️",
+    hasGraph: true,
     rules: [
       {
         title: "📉 The graph always trends down — that's normal",
