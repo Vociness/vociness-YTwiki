@@ -19,9 +19,23 @@
 
 html, body {
   height: 100%;
-  background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.10), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(232, 160, 196, 0.08), transparent 45%),
+    var(--bg);
+  background-size: 180% 180%, 180% 180%, 100% 100%;
+  animation: drift 26s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%   { background-position: 0% 0%, 100% 100%, 0 0; }
+  50%  { background-position: 30% 20%, 70% 80%, 0 0; }
+  100% { background-position: 0% 0%, 100% 100%, 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -113,13 +127,18 @@ html, body {
   padding: 9px 12px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease, padding-left 0.12s ease;
   position: relative;
 }
 
 .rail-btn:hover {
   background: var(--bg-hover);
   color: var(--text);
+  transform: translateX(3px);
+}
+
+.rail-btn:active {
+  transform: translateX(3px) scale(0.97);
 }
 
 .rail-btn.active {
@@ -223,6 +242,10 @@ html, body {
   transform: translateX(-2px);
 }
 
+.back-btn:active {
+  transform: translateX(-2px) scale(0.96);
+}
+
 .back-btn.visible {
   display: inline-flex;
 }
@@ -287,12 +310,25 @@ html, body {
   padding: 20px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .home-card:hover {
   border-color: var(--violet);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px -8px rgba(139, 92, 246, 0.35);
+}
+
+.home-card:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.home-card-num {
+  transition: transform 0.15s ease;
+}
+
+.home-card:hover .home-card-num {
+  transform: scale(1.08);
 }
 
 .home-card-num {
@@ -363,6 +399,62 @@ html, body {
   line-height: 1.6;
   margin-bottom: 32px;
   max-width: 640px;
+}
+
+.graph-widget {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px 24px;
+  margin-bottom: 32px;
+}
+
+.graph-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.graph-tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.graph-tab:hover {
+  border-color: var(--violet);
+  color: var(--text);
+}
+
+.graph-tab.active {
+  background: var(--violet-dim);
+  border-color: var(--violet);
+  color: var(--text);
+}
+
+.graph-svg {
+  width: 100%;
+  height: 160px;
+  display: block;
+}
+
+#graphPath {
+  transition: opacity 0.15s ease;
+}
+
+.graph-caption {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-top: 12px;
 }
 
 .rule {
