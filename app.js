@@ -43,14 +43,72 @@
       </div>
     `).join('');
 
+    const graphHTML = g.hasGraph ? buildRetentionGraph() : '';
+
     section.innerHTML = `
       ${statHTML}
       <h1>${g.title}</h1>
       <p class="guide-intro">${g.intro}</p>
+      ${graphHTML}
       ${rulesHTML}
     `;
 
+    if (g.hasGraph) {
+      // wire up toggle after the markup is in the DOM
+      requestAnimationFrame(() => wireRetentionGraph(section));
+    }
+
     return section;
+  }
+
+  // ---- interactive retention graph (good vs bad curve) ----
+  function buildRetentionGraph() {
+    return `
+      <div class="graph-widget">
+        <div class="graph-toggle" role="tablist">
+          <button class="graph-tab active" data-curve="good" type="button">✅ Good retention</button>
+          <button class="graph-tab" data-curve="bad" type="button">❌ Bad retention</button>
+        </div>
+        <svg class="graph-svg" viewBox="0 0 560 220" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="0" y1="200" x2="560" y2="200" stroke="var(--border)" stroke-width="1"/>
+          <line x1="0" y1="20" x2="0" y2="200" stroke="var(--border)" stroke-width="1"/>
+          <path id="graphPath" fill="none" stroke="var(--violet-bright)" stroke-width="3" stroke-linecap="round"
+                d="M0,40 C80,60 160,70 240,90 S400,120 560,140" />
+        </svg>
+        <div class="graph-caption" id="graphCaption">Small initial dip, mostly flat line, ends around 60% — this is what YouTube wants to keep pushing.</div>
+      </div>
+    `;
+  }
+
+  const CURVES = {
+    good: {
+      path: "M0,40 C80,60 160,70 240,90 S400,120 560,140",
+      caption: "Small initial dip, mostly flat line, ends around 60% — this is what YouTube wants to keep pushing. 🚀"
+    },
+    bad: {
+      path: "M0,40 C40,140 120,165 240,175 S420,195 560,205",
+      caption: "Steep drop right at the start (bad hook), then another steep drop mid-video (bad pacing / restated point). This kills the push. 📉"
+    }
+  };
+
+  function wireRetentionGraph(scope) {
+    const tabs = scope.querySelectorAll('.graph-tab');
+    const path = scope.querySelector('#graphPath');
+    const caption = scope.querySelector('#graphCaption');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (tab.classList.contains('active')) return;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const curve = CURVES[tab.dataset.curve];
+        path.style.opacity = '0';
+        setTimeout(() => {
+          path.setAttribute('d', curve.path);
+          caption.textContent = curve.caption;
+          path.style.opacity = '1';
+        }, 150);
+      });
+    });
   }
 
   function showPage(key) {
