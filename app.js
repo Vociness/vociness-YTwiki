@@ -72,24 +72,55 @@
     });
   }
 
-  // ---- simulated "live" stat counters on home page ----
+  // ---- real "live" stat counters on home page, pulled from the YouTube Data API ----
+  const YT_API_KEY = 'AIzaSyCoUQhmENyNw9NY--dWEQgyftD4FK_eNgE';
+  const YT_CHANNEL_ID = 'UCMyiXya3DhtGjLVNZEI1cTA';
+  const YT_REFRESH_MS = 5 * 60 * 1000; // refresh every 5 min, stays well under the free daily quota
+
   (function initLiveStats() {
     const viewsEl = document.getElementById('statViews');
     const subsEl = document.getElementById('statSubs');
+    const noteEl = document.getElementById('liveStatsNote');
     if (!viewsEl || !subsEl) return;
 
-    let views = 128430;
-    let subs = 4820;
+    let hasRenderedOnce = false;
 
-    renderOdometer(viewsEl, views);
-    renderOdometer(subsEl, subs);
+    async function fetchChannelStats() {
+      const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${YT_CHANNEL_ID}&key=${YT_API_KEY}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('YouTube API request failed: ' + res.status);
+      const data = await res.json();
+      const stats = data.items && data.items[0] && data.items[0].statistics;
+      if (!stats) throw new Error('No channel data returned');
+      return {
+        views: parseInt(stats.viewCount, 10),
+        subs: parseInt(stats.subscriberCount, 10)
+      };
+    }
 
-    setInterval(() => {
-      views += Math.floor(Math.random() * 40) + 5;
-      if (Math.random() < 0.3) subs += 1;
-      renderOdometer(viewsEl, views);
-      renderOdometer(subsEl, subs);
-    }, 4000);
+    async function refresh() {
+      try {
+        const { views, subs } = await fetchChannelStats();
+        renderOdometer(viewsEl, views);
+        renderOdometer(subsEl, subs);
+        if (noteEl) {
+          const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+          noteEl.textContent = 'synced with youtube · ' + time;
+        }
+        hasRenderedOnce = true;
+      } catch (err) {
+        console.warn('Live stats fetch failed:', err);
+        if (!hasRenderedOnce) {
+          // only fall back to a static placeholder if we've never gotten real data yet
+          renderOdometer(viewsEl, 0);
+          renderOdometer(subsEl, 0);
+          if (noteEl) noteEl.textContent = 'couldn\'t reach youtube, showing 0 for now';
+        }
+      }
+    }
+
+    refresh();
+    setInterval(refresh, YT_REFRESH_MS);
   })();
 
   // ---- section number lookup for crumbs ----
@@ -156,16 +187,47 @@
     return 20 + (1 - pct / 100) * 180;
   }
 
+  // Smooth a series of [xFraction 0-1, retentionPct 0-100] points into an SVG path.
+  // Real YouTube retention curves always start at exactly 100% and are full of tiny
+  // bumps/wobbles (viewers rewatching a few seconds, replaying a clip) rather than
+  // being perfectly smooth, so the point lists below bake those small ups and downs in.
+  function curveFromPoints(points) {
+    const pts = points.map(([xf, pct]) => ({ x: xf * 560, y: pctToY(pct) }));
+    let d = `M${pts[0].x},${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[i + 2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+    }
+    return d;
+  }
+
   const CURVES = {
     good: {
-      // starts ~92%, small dip, flattens, ends exactly at 60% (target)
-      path: `M0,${pctToY(92)} C80,${pctToY(84)} 160,${pctToY(78)} 240,${pctToY(72)} S400,${pctToY(64)} 560,${pctToY(60)}`,
-      caption: "Small initial dip, mostly flat line, ends right at the 60% target. This is what YouTube wants to keep pushing. 🚀"
+      // starts at 100%, small early dip, mostly flat with tiny bumps, ends right at the 60% target
+      path: curveFromPoints([
+        [0.00, 100], [0.03, 96], [0.06, 92.5], [0.10, 94], [0.15, 89.5],
+        [0.22, 86], [0.28, 87.5], [0.35, 82.5], [0.42, 79], [0.48, 80],
+        [0.55, 75], [0.62, 71], [0.68, 72], [0.75, 66.5], [0.82, 63],
+        [0.90, 61.5], [1.00, 60]
+      ]),
+      caption: "Starts at 100%, small hook dip, flat with tiny bumps the rest of the way, ends right at the 60% target. This is what YouTube wants to keep pushing. 🚀"
     },
     bad: {
-      // starts ~92%, steep early drop, steep mid drop, ends ~18%
-      path: `M0,${pctToY(92)} C40,${pctToY(48)} 120,${pctToY(38)} 240,${pctToY(32)} S420,${pctToY(20)} 560,${pctToY(18)}`,
-      caption: "Steep drop right at the start (bad hook), then another steep drop mid-video (bad pacing / restated point). This kills the push. 📉"
+      // starts at 100%, steep early drop, steep mid drop, ends ~18%
+      path: curveFromPoints([
+        [0.00, 100], [0.03, 87], [0.06, 74], [0.10, 76], [0.15, 61],
+        [0.20, 49], [0.24, 50.5], [0.30, 41], [0.36, 34], [0.40, 35.5],
+        [0.46, 28], [0.52, 24], [0.58, 25.5], [0.65, 21], [0.72, 19.5],
+        [0.80, 19], [1.00, 18]
+      ]),
+      caption: "Same 100% start, but a steep drop right away (bad hook), then another steep drop mid-video (bad pacing / restated point). This kills the push. 📉"
     }
   };
 
@@ -262,7 +324,8 @@
       tooltip.style.opacity = '1';
 
       const tooltipX = Math.min(Math.max((nearest.x / 560) * rect.width - 55, 4), rect.width - 114);
-      const tooltipY = Math.max((nearest.y / 220) * rect.height - 54, 4);
+      // offset well above the dot (dot radius + gap + tooltip height) so the dot stays visible
+      const tooltipY = Math.max((nearest.y / 220) * rect.height - 92, 4);
       tooltip.style.left = tooltipX + 'px';
       tooltip.style.top = tooltipY + 'px';
     }
@@ -331,17 +394,39 @@
   function wireWaveGraph(scope) {
     const bars = scope.querySelectorAll('.wave-bar-wrap');
     const caption = scope.querySelector('#waveCaption');
+
+    function pop(bar) {
+      bar.classList.remove('bounce');
+      void bar.offsetWidth; // force reflow so the animation restarts even on repeat clicks
+      bar.classList.add('bounce');
+    }
+
     bars.forEach(bar => {
+      // squish down while actively held
+      bar.addEventListener('pointerdown', () => {
+        bar.classList.add('pressed');
+      });
+
+      // on release: un-squish, then pop/bounce back to its resting position
+      const release = () => {
+        if (!bar.classList.contains('pressed')) return;
+        bar.classList.remove('pressed');
+        pop(bar);
+      };
+      bar.addEventListener('pointerup', release);
+      bar.addEventListener('pointerleave', release);
+      bar.addEventListener('pointercancel', release);
+
+      // selecting the wave (updates caption / highlighted state) is separate from the squish feedback
       bar.addEventListener('click', () => {
         bars.forEach(b => b.classList.remove('active'));
         bar.classList.add('active');
         caption.textContent = WAVES[Number(bar.dataset.index)].desc;
+      });
 
-        // fidget-toy bounce feedback on every click
+      // clean up the animation class once it finishes so it's ready to replay instantly
+      bar.querySelector('.wave-bar').addEventListener('animationend', () => {
         bar.classList.remove('bounce');
-        // force reflow so animation restarts even on repeat clicks
-        void bar.offsetWidth;
-        bar.classList.add('bounce');
       });
     });
   }
