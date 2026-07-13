@@ -299,6 +299,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  min-height: calc(100vh - 89px); /* 89px = pane-header height, keeps home vertically centered in the viewport */
+}
+
+/* home is the only view that should be vertically centered; guide pages
+   (which can be taller than the viewport) stay top-aligned so they scroll normally */
+.pane-body:has(.page-home.active) {
+  justify-content: center;
 }
 
 /* ============ HOME ============ */
@@ -320,15 +328,12 @@ body {
 }
 
 .home-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  color: var(--bg);
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+  border: 2px solid var(--violet);
   box-shadow: 0 12px 32px -8px rgba(139, 92, 246, 0.5);
 }
 
@@ -810,19 +815,24 @@ body {
 .wave-bar-wrap.active .wave-bar {
   background: linear-gradient(180deg, var(--violet-bright), var(--violet));
   border-color: var(--violet-bright);
-  transform: scaleY(1.08) scaleX(1.12) translateY(-4px) rotate(-2deg);
 }
 
+/* held down: squished, stays squished until release */
+.wave-bar-wrap.pressed .wave-bar {
+  transition: transform 0.08s ease;
+  transform: scaleY(0.82) scaleX(1.12) translateY(6px);
+}
+
+/* released: pops past its resting size, then settles back exactly where it started */
 .wave-bar-wrap.bounce .wave-bar {
   animation: wave-bounce 0.5s cubic-bezier(.34,1.56,.64,1);
 }
 
 @keyframes wave-bounce {
-  0%   { transform: scaleY(1) scaleX(1); }
-  35%  { transform: scaleY(0.82) scaleX(1.15) translateY(6px); }
-  65%  { transform: scaleY(1.15) scaleX(0.92) translateY(-8px) rotate(-3deg); }
-  85%  { transform: scaleY(0.96) scaleX(1.04) translateY(2px) rotate(1deg); }
-  100% { transform: scaleY(1) scaleX(1); }
+  0%   { transform: scaleY(0.82) scaleX(1.12) translateY(6px); }
+  45%  { transform: scaleY(1.15) scaleX(0.92) translateY(-8px) rotate(-3deg); }
+  70%  { transform: scaleY(0.96) scaleX(1.04) translateY(2px) rotate(1deg); }
+  100% { transform: scaleY(1) scaleX(1) translateY(0) rotate(0); }
 }
 
 .wave-bar-label {
