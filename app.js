@@ -4,14 +4,72 @@
   const backBtn = document.getElementById('backBtn');
   const railButtons = document.querySelectorAll('.rail-btn');
   const lastUpdatedEl = document.getElementById('lastUpdated');
+  const toTopBtn = document.getElementById('toTopBtn');
 
-  // ---- last updated date (today's date, formatted) ----
+  // ---- last updated date ----
   if (lastUpdatedEl) {
     const today = new Date();
     const formatted = today.toLocaleDateString('en-US', {
       month: 'short', day: 'numeric', year: 'numeric'
     });
-    lastUpdatedEl.textContent = 'last updated — ' + formatted;
+    lastUpdatedEl.textContent = 'last updated: ' + formatted;
+  }
+
+  // ---- back to top button ----
+  if (toTopBtn) {
+    window.addEventListener('scroll', () => {
+      toTopBtn.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+    });
+    toTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ---- odometer-style rolling number display ----
+  // renders a number as individual digit "reels" that slide when the value changes
+  function renderOdometer(el, value) {
+    const str = value.toLocaleString('en-US');
+    const chars = str.split('');
+
+    // build structure once, then just update reel positions on subsequent calls
+    if (!el.dataset.odoBuilt) {
+      el.innerHTML = chars.map(ch => {
+        if (ch === ',') return `<span class="odo-comma">,</span>`;
+        return `<span class="odo-digit"><span class="odo-digit-strip">${
+          Array.from({length:10}, (_,i)=>`<span>${i}</span>`).join('')
+        }</span></span>`;
+      }).join('');
+      el.dataset.odoBuilt = '1';
+      el.dataset.odoLen = chars.length;
+      // set initial position instantly (no slide-in on first render)
+      let digitIndex = 0;
+      chars.forEach(ch => {
+        if (ch === ',') return;
+        const strip = el.querySelectorAll('.odo-digit-strip')[digitIndex];
+        strip.style.transition = 'none';
+        strip.style.transform = `translateY(${-parseInt(ch, 10) * 32}px)`;
+        digitIndex++;
+      });
+      requestAnimationFrame(() => {
+        el.querySelectorAll('.odo-digit-strip').forEach(s => s.style.transition = '');
+      });
+      return;
+    }
+
+    // if digit count changed (number grew a digit), rebuild fresh
+    if (parseInt(el.dataset.odoLen, 10) !== chars.length) {
+      el.dataset.odoBuilt = '';
+      renderOdometer(el, value);
+      return;
+    }
+
+    let digitIndex = 0;
+    chars.forEach(ch => {
+      if (ch === ',') { digitIndex += 0; return; }
+      const strip = el.querySelectorAll('.odo-digit-strip')[digitIndex];
+      if (strip) strip.style.transform = `translateY(${-parseInt(ch, 10) * 32}px)`;
+      digitIndex++;
+    });
   }
 
   // ---- simulated "live" stat counters on home page ----
@@ -23,23 +81,24 @@
     let views = 128430;
     let subs = 4820;
 
-    function format(n) {
-      return n.toLocaleString('en-US');
-    }
-
-    function render() {
-      viewsEl.textContent = format(views);
-      subsEl.textContent = format(subs);
-    }
-
-    render();
+    renderOdometer(viewsEl, views);
+    renderOdometer(subsEl, subs);
 
     setInterval(() => {
       views += Math.floor(Math.random() * 40) + 5;
       if (Math.random() < 0.3) subs += 1;
-      render();
+      renderOdometer(viewsEl, views);
+      renderOdometer(subsEl, subs);
     }, 4000);
   })();
+
+  // ---- section number lookup for crumbs ----
+  const SECTION_LABELS = {
+    scripting: '01 · scripting',
+    packaging: '02 · packaging',
+    algorithm: '03 · algorithm',
+    channelops: '04 · channel ops'
+  };
 
   // Build DOM for a guide page and cache it so re-visits are instant.
   const renderedPages = {};
@@ -91,6 +150,25 @@
   }
 
   // ---- interactive retention graph (good vs bad curve) ----
+  // viewBox is 560 x 220. Plot area: y=20 (100% retention) to y=200 (0% retention).
+  // pctToY(pct) = 20 + (1 - pct/100) * 180
+  function pctToY(pct) {
+    return 20 + (1 - pct / 100) * 180;
+  }
+
+  const CURVES = {
+    good: {
+      // starts ~92%, small dip, flattens, ends exactly at 60% (target)
+      path: `M0,${pctToY(92)} C80,${pctToY(84)} 160,${pctToY(78)} 240,${pctToY(72)} S400,${pctToY(64)} 560,${pctToY(60)}`,
+      caption: "Small initial dip, mostly flat line, ends right at the 60% target. This is what YouTube wants to keep pushing. 🚀"
+    },
+    bad: {
+      // starts ~92%, steep early drop, steep mid drop, ends ~18%
+      path: `M0,${pctToY(92)} C40,${pctToY(48)} 120,${pctToY(38)} 240,${pctToY(32)} S420,${pctToY(20)} 560,${pctToY(18)}`,
+      caption: "Steep drop right at the start (bad hook), then another steep drop mid-video (bad pacing / restated point). This kills the push. 📉"
+    }
+  };
+
   function buildRetentionGraph() {
     return `
       <div class="graph-widget">
@@ -98,39 +176,135 @@
           <button class="graph-tab active" data-curve="good" type="button">✅ Good retention</button>
           <button class="graph-tab" data-curve="bad" type="button">❌ Bad retention</button>
         </div>
-        <div class="graph-canvas">
-          <svg class="graph-svg" id="graphSvg" viewBox="0 0 560 220" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="0" y1="200" x2="560" y2="200" stroke="var(--border)" stroke-width="1"/>
-            <line x1="0" y1="20" x2="0" y2="200" stroke="var(--border)" stroke-width="1"/>
-            <path id="graphPath" fill="none" stroke="var(--violet-bright)" stroke-width="3" stroke-linecap="round"
-                  d="M0,40 C80,60 160,70 240,90 S400,120 560,140" />
-            <line id="hoverLine" x1="0" y1="20" x2="0" y2="200" stroke="var(--violet-bright)" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
-            <circle id="hoverDot" cx="0" cy="0" r="5" fill="var(--violet-bright)" stroke="var(--bg-raised)" stroke-width="2" opacity="0"/>
-          </svg>
-          <div class="graph-tooltip" id="graphTooltip"></div>
+        <div class="graph-axes">
+          <div class="graph-ylabels">
+            <span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span>
+          </div>
+          <div class="graph-canvas">
+            <svg class="graph-svg" id="graphSvg" viewBox="0 0 560 220" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="0" y1="200" x2="560" y2="200" stroke="var(--border)" stroke-width="1"/>
+              <line x1="0" y1="20" x2="0" y2="200" stroke="var(--border)" stroke-width="1"/>
+              <path id="graphPath" fill="none" stroke="var(--violet-bright)" stroke-width="3" stroke-linecap="round"
+                    d="${CURVES.good.path}" />
+              <line id="hoverLine" x1="0" y1="20" x2="0" y2="200" stroke="var(--violet-bright)" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+              <circle id="hoverDot" cx="0" cy="0" r="5" fill="var(--violet-bright)" stroke="var(--bg-raised)" stroke-width="2" opacity="0"/>
+            </svg>
+            <div class="graph-tooltip" id="graphTooltip"></div>
+          </div>
+          <div class="graph-xlabels">
+            <span>0:00</span><span>2:00</span><span>4:00</span><span>6:00</span><span>8:00</span>
+          </div>
         </div>
-        <div class="graph-caption" id="graphCaption">Small initial dip, mostly flat line, ends around 60% — this is what YouTube wants to keep pushing.</div>
+        <div class="graph-caption" id="graphCaption">${CURVES.good.caption}</div>
       </div>
     `;
   }
 
-  const CURVES = {
-    good: {
-      path: "M0,40 C80,60 160,70 240,90 S400,120 560,140",
-      caption: "Small initial dip, mostly flat line, ends around 60% — this is what YouTube wants to keep pushing. 🚀"
-    },
-    bad: {
-      path: "M0,40 C40,140 120,165 240,175 S420,195 560,205",
-      caption: "Steep drop right at the start (bad hook), then another steep drop mid-video (bad pacing / restated point). This kills the push. 📉"
-    }
-  };
+  function wireRetentionGraph(scope) {
+    const tabs = scope.querySelectorAll('.graph-tab');
+    const path = scope.querySelector('#graphPath');
+    const caption = scope.querySelector('#graphCaption');
+    const svg = scope.querySelector('#graphSvg');
+    const hoverDot = scope.querySelector('#hoverDot');
+    const hoverLine = scope.querySelector('#hoverLine');
+    const tooltip = scope.querySelector('#graphTooltip');
 
-  // ---- interactive wave-system bar chart ----
+    function sampleCurve() {
+      const len = path.getTotalLength();
+      const samples = [];
+      const steps = 140;
+      for (let i = 0; i <= steps; i++) {
+        samples.push(path.getPointAtLength((i / steps) * len));
+      }
+      return samples;
+    }
+
+    let samples = sampleCurve();
+
+    function retentionAtY(y) {
+      const topY = 20, bottomY = 200;
+      const clampedY = Math.max(topY, Math.min(bottomY, y));
+      return Math.round(100 - ((clampedY - topY) / (bottomY - topY)) * 100);
+    }
+
+    function timeLabelAtX(xFraction) {
+      const totalSeconds = 480; // 8 minute reference video
+      const s = Math.round(xFraction * totalSeconds);
+      const m = Math.floor(s / 60);
+      const sec = String(s % 60).padStart(2, '0');
+      return `${m}:${sec}`;
+    }
+
+    function updateHover(clientX) {
+      const rect = svg.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const relX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const svgX = relX * 560;
+
+      let nearest = samples[0];
+      let nearestDist = Infinity;
+      for (const s of samples) {
+        const d = Math.abs(s.x - svgX);
+        if (d < nearestDist) { nearestDist = d; nearest = s; }
+      }
+
+      hoverDot.setAttribute('cx', nearest.x);
+      hoverDot.setAttribute('cy', nearest.y);
+      hoverDot.setAttribute('opacity', '1');
+      hoverLine.setAttribute('x1', nearest.x);
+      hoverLine.setAttribute('x2', nearest.x);
+      hoverLine.setAttribute('opacity', '1');
+
+      const pct = retentionAtY(nearest.y);
+      const time = timeLabelAtX(nearest.x / 560);
+
+      tooltip.innerHTML = `<span class="tt-time">${time}</span><span class="tt-pct">${pct}% retention</span>`;
+      tooltip.style.opacity = '1';
+
+      const tooltipX = Math.min(Math.max((nearest.x / 560) * rect.width - 55, 4), rect.width - 114);
+      const tooltipY = Math.max((nearest.y / 220) * rect.height - 54, 4);
+      tooltip.style.left = tooltipX + 'px';
+      tooltip.style.top = tooltipY + 'px';
+    }
+
+    function hideHover() {
+      hoverDot.setAttribute('opacity', '0');
+      hoverLine.setAttribute('opacity', '0');
+      tooltip.style.opacity = '0';
+    }
+
+    svg.addEventListener('mousemove', (e) => updateHover(e.clientX));
+    svg.addEventListener('mouseleave', hideHover);
+    svg.addEventListener('touchmove', (e) => {
+      if (e.touches[0]) updateHover(e.touches[0].clientX);
+    }, { passive: true });
+    svg.addEventListener('touchend', hideHover);
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (tab.classList.contains('active')) return;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const curve = CURVES[tab.dataset.curve];
+        path.style.transition = 'opacity 0.15s ease';
+        path.style.opacity = '0';
+        hideHover();
+        setTimeout(() => {
+          path.setAttribute('d', curve.path);
+          caption.textContent = curve.caption;
+          path.style.opacity = '1';
+          samples = sampleCurve();
+        }, 150);
+      });
+    });
+  }
+
+  // ---- interactive wave-system bar chart (fidget-bounce on click) ----
   const WAVES = [
     { label: 'Wave 1', impressions: 400, desc: 'Small test group. YouTube watches CTR + early retention closely. 🧪' },
-    { label: 'Wave 2', impressions: 1200, desc: 'Responded well → ramp up. Still browse feed only. 📈' },
-    { label: 'Wave 3', impressions: 4500, desc: 'Continued strong signal → bigger push, browse feed expands. 🚀' },
-    { label: 'Wave 4', impressions: 9000, desc: 'Suggested feed unlocks — the high-value placement. 💎' },
+    { label: 'Wave 2', impressions: 1200, desc: 'Responded well, so it ramps up. Still browse feed only. 📈' },
+    { label: 'Wave 3', impressions: 4500, desc: 'Continued strong signal, bigger push, browse feed expands. 🚀' },
+    { label: 'Wave 4', impressions: 9000, desc: 'Suggested feed unlocks, the high-value placement. 💎' },
     { label: 'Wave 5', impressions: 15000, desc: 'Full push. Session-time data now decides how far this goes. 🌊' }
   ];
 
@@ -158,124 +332,21 @@
     const bars = scope.querySelectorAll('.wave-bar-wrap');
     const caption = scope.querySelector('#waveCaption');
     bars.forEach(bar => {
-      const setActive = () => {
+      bar.addEventListener('click', () => {
         bars.forEach(b => b.classList.remove('active'));
         bar.classList.add('active');
         caption.textContent = WAVES[Number(bar.dataset.index)].desc;
-      };
-      bar.addEventListener('mouseenter', setActive);
-      bar.addEventListener('click', setActive);
-      bar.addEventListener('focus', setActive);
-    });
-  }
 
-  function wireRetentionGraph(scope) {
-    const tabs = scope.querySelectorAll('.graph-tab');
-    const path = scope.querySelector('#graphPath');
-    const caption = scope.querySelector('#graphCaption');
-    const svg = scope.querySelector('#graphSvg');
-    const hoverDot = scope.querySelector('#hoverDot');
-    const hoverLine = scope.querySelector('#hoverLine');
-    const tooltip = scope.querySelector('#graphTooltip');
-
-    // sample N points along the current path so we can find y for any x
-    function sampleCurve() {
-      const len = path.getTotalLength();
-      const samples = [];
-      const steps = 140;
-      for (let i = 0; i <= steps; i++) {
-        const pt = path.getPointAtLength((i / steps) * len);
-        samples.push(pt);
-      }
-      return samples;
-    }
-
-    let samples = sampleCurve();
-
-    function retentionAtX(xSvg) {
-      // 220 viewBox height, plot area is y:20(top)-200(bottom) => retention 100%-0%... but graphs represent ~90%→~30% range visually
-      // Map y position to an approximate retention percent for display purposes
-      const topY = 20, bottomY = 200;
-      const clampedY = Math.max(topY, Math.min(bottomY, xSvg.y));
-      const pct = 100 - ((clampedY - topY) / (bottomY - topY)) * 100;
-      return Math.round(pct);
-    }
-
-    function timeLabelAtX(xFraction) {
-      // assumes an 8 minute (480s) video for labeling purposes
-      const totalSeconds = 480;
-      const s = Math.round(xFraction * totalSeconds);
-      const m = Math.floor(s / 60);
-      const sec = String(s % 60).padStart(2, '0');
-      return `${m}:${sec}`;
-    }
-
-    function updateHover(clientX) {
-      const rect = svg.getBoundingClientRect();
-      const relX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-      const svgX = relX * 560;
-
-      // find nearest sample by x
-      let nearest = samples[0];
-      let nearestDist = Infinity;
-      for (const s of samples) {
-        const d = Math.abs(s.x - svgX);
-        if (d < nearestDist) { nearestDist = d; nearest = s; }
-      }
-
-      hoverDot.setAttribute('cx', nearest.x);
-      hoverDot.setAttribute('cy', nearest.y);
-      hoverDot.setAttribute('opacity', '1');
-      hoverLine.setAttribute('x1', nearest.x);
-      hoverLine.setAttribute('x2', nearest.x);
-      hoverLine.setAttribute('opacity', '1');
-
-      const pct = retentionAtX(nearest);
-      const time = timeLabelAtX(nearest.x / 560);
-
-      tooltip.innerHTML = `<span class="tt-time">${time}</span><span class="tt-pct">${pct}% retention</span>`;
-      tooltip.style.opacity = '1';
-
-      // position tooltip near the dot, keep inside bounds
-      const tooltipX = Math.min(Math.max(nearest.x / 560 * rect.width - 55, 4), rect.width - 114);
-      const tooltipY = Math.max((nearest.y / 220) * rect.height - 54, 4);
-      tooltip.style.left = tooltipX + 'px';
-      tooltip.style.top = tooltipY + 'px';
-    }
-
-    function hideHover() {
-      hoverDot.setAttribute('opacity', '0');
-      hoverLine.setAttribute('opacity', '0');
-      tooltip.style.opacity = '0';
-    }
-
-    svg.addEventListener('mousemove', (e) => updateHover(e.clientX));
-    svg.addEventListener('mouseleave', hideHover);
-    svg.addEventListener('touchmove', (e) => {
-      if (e.touches[0]) updateHover(e.touches[0].clientX);
-    }, { passive: true });
-    svg.addEventListener('touchend', hideHover);
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        if (tab.classList.contains('active')) return;
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const curve = CURVES[tab.dataset.curve];
-        path.style.opacity = '0';
-        hideHover();
-        setTimeout(() => {
-          path.setAttribute('d', curve.path);
-          caption.textContent = curve.caption;
-          path.style.opacity = '1';
-          samples = sampleCurve();
-        }, 150);
+        // fidget-toy bounce feedback on every click
+        bar.classList.remove('bounce');
+        // force reflow so animation restarts even on repeat clicks
+        void bar.offsetWidth;
+        bar.classList.add('bounce');
       });
     });
   }
 
   function showPage(key) {
-    // hide all pages currently in DOM
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
     if (key === 'home') {
@@ -301,7 +372,6 @@
     paneBody.scrollTop = 0;
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
 
-    // reflect in URL hash without triggering a reload
     history.replaceState(null, '', '#' + key);
   }
 
@@ -311,17 +381,14 @@
     });
   }
 
-  // Wire up every button that has a data-page attribute (rail + home cards)
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-page]');
     if (!btn) return;
     showPage(btn.dataset.page);
   });
 
-  // Back button always returns to home
   backBtn.addEventListener('click', () => showPage('home'));
 
-  // Deep-link support: opening #retention loads straight to that guide
   const initial = window.location.hash.replace('#', '');
   if (initial && GUIDES[initial]) {
     showPage(initial);
