@@ -1,62 +1,65 @@
-// Each guide = one topic page. Add new ones here — app.js renders them automatically.
+// Each guide = one topic page. Add new ones here, app.js renders them automatically.
 const GUIDES = {
 
   "perfect-script": {
     title: "🧩 Writing The Perfect Script",
+    section: "scripting",
     stat: { num: "8", label: "sentence framework" },
     intro: "The 8-sentence intro framework. Get straight to the point, make everything in the intro build to the payoff, no extra fluff. 🎯",
     rules: [
       {
-        title: "🪝 Sentence 1 — The Hook",
-        body: "Super eye-catching visuals, psychological triggers, give context to the viewer. Hooking techniques: make the viewer question something, create urgency, include someone recognizable (famous) in the first clip/frame, anti-hook (no context, straight into the video), immediate consequence (show the result before the explanation), contradictory hook (directly conflicts with what the viewer assumes).",
-        example: "\"Doing this ruined my sleep for 3 weeks.\" — immediate consequence\n\"Healthy food can be worse for you than junk food.\" — contradictory hook\n\"Do you know why MrBeast turned down 1 billion dollars?\" — recognizable person + making the viewer question + urgency"
+        title: "🪝 Sentence 1: The Hook",
+        body: "Super eye-catching visuals, psychological triggers, give context to the viewer. Hooking techniques: make the viewer question something, create urgency, include someone recognizable (famous) in the first clip or frame, anti-hook (no context, straight into the video), immediate consequence (show the result before the explanation), contradictory hook (directly conflicts with what the viewer assumes).",
+        example: "\"Doing this ruined my sleep for 3 weeks.\" (immediate consequence)\n\"Healthy food can be worse for you than junk food.\" (contradictory hook)\n\"Do you know why MrBeast turned down 1 billion dollars?\" (recognizable person + making the viewer question + urgency)"
       },
       {
-        title: "🤝 Sentence 2 — The Supporting Hook",
-        body: "Set an expectation, then overdeliver on it. Flow: set an expectation → give context → overdeliver. Don't overcomplicate this — if you don't know what you're doing, don't do it. Techniques: read the viewer's thought, then shut it down by telling them they're completely wrong.",
+        title: "🤝 Sentence 2: The Supporting Hook",
+        body: "Set an expectation, then overdeliver on it. Flow: set an expectation, give context, overdeliver. Don't overcomplicate this, if you don't know what you're doing, don't do it. Techniques: read the viewer's thought, then shut it down by telling them they're completely wrong.",
         example: "\"You may think it's because MrBeast doesn't actually want to sell his channel, or maybe even because he already has enough money, but you would be completely wrong.\""
       },
       {
-        title: "📍 Sentences 3-4 — Setting The Scene",
+        title: "📍 Sentences 3 to 4: Setting The Scene",
         body: "Set a time or location and develop context of the video slowly, leading into the payoff. Don't overexplain.",
         example: "\"Recently, MrBeast went on Andrew Schultz's podcast and revealed that he had been offered 1 billion dollars for the sale of all of his businesses combined.\""
       },
       {
-        title: "📊 Sentences 5-6 — Setting The Stakes",
+        title: "📊 Sentences 5 to 6: Setting The Stakes",
         body: "Turn the context and curiosity into an investment, add extra context or facts to help the next techniques land. Techniques: \"why did they do this?\", tease the viewer for the payoff, make the viewer solve a puzzle, rehook (remind the viewer why they're watching).",
         example: "\"If he accepted this offer, MrBeast would not only become YouTube's first billionaire, but also the youngest self-made billionaire in history. So, what was the crazy reason he gave for declining this offer?\""
       },
       {
-        title: "🎁 Sentence 7 — The Payoff",
+        title: "🎁 Sentence 7: The Payoff",
         body: "Deliver the payoff fast. Keep it simple.",
         example: "\"So who is it? Well, his name is Chandler.\""
       },
       {
-        title: "🔁 Sentence 8 — CTA (optional)",
-        body: "Tie the call-to-action into the actions of the video itself. Add a loop when ending the video — it boosts retention.",
-        example: "\"...and subscribe if you want to work for MrBeast.\" — CTA tied directly to the story's action"
+        title: "🔁 Sentence 8: CTA (optional)",
+        body: "Tie the call-to-action into the actions of the video itself. Add a loop when ending the video, it boosts retention.",
+        example: "\"...and subscribe if you want to work for MrBeast.\" (CTA tied directly to the story's action)"
       }
     ]
   },
 
   "scripting-rules": {
     title: "📝 Scripting Rules",
+    section: "scripting",
     stat: { num: "4️⃣", label: "non-negotiable" },
     intro: "Pulled straight from feedback on the top-performing videos. Apply these EVERY single time a script gets written or reviewed. No exceptions. 🚫",
     rules: [
       {
         title: "⏱️ Front-load the value in the first 25 seconds",
         body: "The hook has to tell viewers everything they're getting before you dive in. Give them a map so they have a reason to stay for the whole video, not just the next 10 seconds.",
-        example: "Roblox did X, Y, Z and a LOT more in this video — let's get into it."
+        example: "Roblox did X, Y, Z and a LOT more in this video, let's get into it."
       },
       {
         title: "🔁 Never restate the same point twice",
         body: "The single biggest retention killer. After writing any paragraph, ask: did I already say this? If yes, cut the first version and keep the sharper one.",
-        example: "❌ WRONG: \"further in the wrong direction because in the midst of the Great Chat depression, Roblox somehow managed to announce an update that's arguably even worse\" — says \"bad direction\" twice.\n✅ FIX: \"further in the wrong direction — Roblox just announced [the update].\""
+        example: "❌ WRONG: \"further in the wrong direction because in the midst of the Great Chat depression, Roblox somehow managed to announce an update that's arguably even worse\", says \"bad direction\" twice.\n✅ FIX: \"further in the wrong direction, Roblox just announced [the update].\""
       },
       {
         title: "1️⃣ One example maximum in the opening",
-        body: "Multiple flat examples back to back kill retention early. One punchy example with audio emphasis is enough to prove the point — then move on. Viewers want the point, not a lecture. 🎯"
+        body: "Multiple flat examples back to back kill retention early. One punchy example with audio emphasis is enough to prove the point, then move on. Viewers want the point, not a lecture. 🎯",
+        example: "Instead of listing three separate clothing creators who got hit by the fee change, pick the one with the most dramatic number and use it alone: \"One creator watched their payout drop from $4,000 a month to $600 overnight.\" That's it, then move straight to the news."
       },
       {
         title: "💭 Opinion → news, not opinion → opinion → news",
@@ -67,12 +70,13 @@ const GUIDES = {
 
   "shorts-structure": {
     title: "⚡ Shorts Structure",
+    section: "scripting",
     stat: { num: "81%+", label: "watch % target" },
-    intro: "Hook → build tension → payoff at the very end. Pay off early and retention falls off a cliff. 📉",
+    intro: "Hook, build tension, payoff at the very end. Pay off early and retention falls off a cliff. 📉",
     rules: [
       {
         title: "🛑 First 2 seconds interrupt the scroll",
-        body: "The hook starts before your mouth even opens. The first frame can't look dead — it has to grab attention instantly."
+        body: "The hook starts before your mouth even opens. The first frame can't look dead, it has to grab attention instantly."
       },
       {
         title: "🎁 Hold the payoff until the last line",
@@ -80,27 +84,28 @@ const GUIDES = {
       },
       {
         title: "🏒 Short and high-retention beats long and mid",
-        body: "A 15–20 second short with 120%+ retention (rewatches) will beat a 40 second short with 60% retention every time."
+        body: "A 15 to 20 second short with 120%+ retention (rewatches) will beat a 40 second short with 60% retention every time."
       },
       {
         title: "🔇 It has to work on mute",
-        body: "Watch it back with no sound. If you can't tell what's happening, it's not universal enough. Always caption — a lot of people scroll silent."
+        body: "Watch it back with no sound. If you can't tell what's happening, it's not universal enough. Always caption, a lot of people scroll silent."
       },
       {
         title: "😱 Every short needs an emotion",
-        body: "Curiosity, anger, surprise, ego — something. No emotion means scroll. You're making a stranger feel something in under a minute, not posting a clip."
+        body: "Curiosity, anger, surprise, ego, something. No emotion means scroll. You're making a stranger feel something in under a minute, not posting a clip."
       },
       {
         title: "🔔 Ask for the sub before the payoff",
-        body: "Drop the prompt while the viewer is still locked in, not after. Keep it small or transparent — the moment it feels like an ad, they swipe."
+        body: "Drop the prompt while the viewer is still locked in, not after. Keep it small or transparent, the moment it feels like an ad, they swipe."
       }
     ]
   },
 
   "longform-structure": {
     title: "🎥 Long-Form Structure",
+    section: "scripting",
     stat: { num: "8min+", label: "for mid-roll ads" },
-    intro: "Different rules from Shorts. Viewers forget why they stayed — remind them. 🧠",
+    intro: "Different rules from Shorts. Viewers forget why they stayed, remind them. 🧠",
     rules: [
       {
         title: "🪝 Use multiple hooks throughout",
@@ -108,18 +113,19 @@ const GUIDES = {
       },
       {
         title: "⏳ Always aim past 8 minutes",
-        body: "That's the mid-roll ad eligibility threshold. A one-hour video multiplies RPM roughly 6x versus average because viewers see far more ads — but never pad runtime at the expense of retention. 💰"
+        body: "That's the mid-roll ad eligibility threshold. A one-hour video multiplies RPM roughly 6x versus average because viewers see far more ads, but never pad runtime at the expense of retention. 💰"
       },
       {
         title: "🖼️ Title and thumbnail work together",
-        body: "They should give the viewer complete context of what they'll miss by not clicking — not duplicate each other, complement each other."
+        body: "They should give the viewer complete context of what they'll miss by not clicking, not duplicate each other, complement each other."
       }
     ]
   },
 
   "thumbnails": {
     title: "👀 Thumbnails & CTR",
-    stat: { num: "4–5%", label: "average CTR" },
+    section: "packaging",
+    stat: { num: "4 to 5%", label: "average CTR" },
     intro: "CTR is the first gate. Below 3% and YouTube won't push the video, full stop. 🚪",
     rules: [
       {
@@ -128,7 +134,7 @@ const GUIDES = {
       },
       {
         title: "🤖 YouTube's AI actually scans the thumbnail",
-        body: "Faces, objects, and text are read by the algorithm — the thumbnail isn't just for humans, it's classification data too."
+        body: "Faces, objects, and text are read by the algorithm, the thumbnail isn't just for humans, it's classification data too."
       },
       {
         title: "💡 Idea beats design",
@@ -139,6 +145,7 @@ const GUIDES = {
 
   "titles": {
     title: "🏷️ Titles & Metadata",
+    section: "packaging",
     stat: { num: "#1", label: "priority on a new channel" },
     intro: "Metadata is the most important lever on a channel YouTube doesn't trust yet. 🔑",
     rules: [
@@ -151,35 +158,37 @@ const GUIDES = {
         body: "All of it gives the algorithm more context for classification. Empty descriptions are a wasted signal."
       },
       {
-        title: "⏰ First 24–48 hours is a review window",
-        body: "After upload, YouTube transcribes the audio, scans the thumbnail, and classifies the content before it starts really pushing. That's why a new video's first views are slow to arrive — it's still being profiled."
+        title: "⏰ First 24 to 48 hours is a review window",
+        body: "After upload, YouTube transcribes the audio, scans the thumbnail, and classifies the content before it starts really pushing. That's why a new video's first views are slow to arrive, it's still being profiled."
       }
     ]
   },
 
   "retention": {
     title: "📈 Retention Graph",
+    section: "algorithm",
     stat: { num: "60%", label: "target @ 8min EOV" },
     intro: "More important than CTR. Flat, high, smallest possible initial dip. 🏔️",
     hasGraph: true,
     rules: [
       {
-        title: "📉 The graph always trends down — that's normal",
+        title: "📉 The graph always trends down, that's normal",
         body: "Viewers naturally leave over time. What matters is the shape, not the fact that it declines."
       },
       {
         title: "⚠️ A steep early dip means a bad hook",
-        body: "If a lot of viewers bail in the first seconds, the hook isn't doing its job — it didn't earn the click."
+        body: "If a lot of viewers bail in the first seconds, the hook isn't doing its job, it didn't earn the click."
       },
       {
         title: "🐌 A steep dip mid-video means bad pacing",
-        body: "If retention craters partway through, that's a storytelling and pacing problem, not a hook problem — usually a restated point or a payoff given too early."
+        body: "If retention craters partway through, that's a storytelling and pacing problem, not a hook problem, usually a restated point or a payoff given too early."
       }
     ]
   },
 
   "waves": {
     title: "🌊 Wave System",
+    section: "algorithm",
     stat: { num: "3", label: "core signals tracked" },
     intro: "How YouTube actually decides who sees a new video. 🎯",
     hasWaveGraph: true,
@@ -194,15 +203,16 @@ const GUIDES = {
       },
       {
         title: "⏱️ Session time is the strongest signal of all",
-        body: "YouTube's real goal is total time on platform. A video that leads to another video watched — even an unrelated one via end-screen or playlist — is one of the strongest pushes a creator can trigger."
+        body: "YouTube's real goal is total time on platform. A video that leads to another video watched, even an unrelated one via end-screen or playlist, is one of the strongest pushes a creator can trigger."
       }
     ]
   },
 
   "editing-workflow": {
     title: "✂️ Editing Workflow",
+    section: "channelops",
     stat: { num: "2", label: "core tools" },
-    intro: "Scripting comes first — editing only fixes what a bad script can't. 🛠️",
+    intro: "Scripting comes first, editing only fixes what a bad script can't. 🛠️",
     rules: [
       {
         title: "🔍 Script audit before edit audit",
@@ -210,7 +220,7 @@ const GUIDES = {
       },
       {
         title: "💵 Editor pay structure",
-        body: "Bonuses based on videos completed, not views — editors are inconsistent contributors to view count, but consistency of delivery is something they control directly."
+        body: "Bonuses based on videos completed, not views, editors are inconsistent contributors to view count, but consistency of delivery is something they control directly."
       },
       {
         title: "📁 Shared drive for materials",
@@ -221,8 +231,9 @@ const GUIDES = {
 
   "branding": {
     title: "🎨 Visual Branding",
+    section: "channelops",
     stat: { num: "1", label: "signature look" },
-    intro: "Differentiation matters — a look that blends into the niche gets skipped over. 👻",
+    intro: "Differentiation matters, a look that blends into the niche gets skipped over. 👻",
     rules: [
       {
         title: "🫥 Blend-in aesthetics blend into scroll-past",
@@ -230,7 +241,7 @@ const GUIDES = {
       },
       {
         title: "🎭 A mascot or glitch-style identity creates recognition",
-        body: "A distinct visual anchor — a mascot, a consistent visual glitch effect, a specific color language — gives viewers something to recognize at a glance, separate from any one thumbnail."
+        body: "A distinct visual anchor, a mascot, a consistent visual glitch effect, a specific color language, gives viewers something to recognize at a glance, separate from any one thumbnail."
       }
     ]
   }
